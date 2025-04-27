@@ -130,9 +130,25 @@ function App() {
     }
   };
 
+  const handleDownload = () => {
+    const json = JSON.stringify(rows, null, 2);
+    const blob = new Blob([json], { type: 'application/json' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `pet-list-${new Date().toISOString().slice(0, 10)}.json`;
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+    URL.revokeObjectURL(url);
+  };
+
   return (
     <Box sx={{ display: 'flex', flexDirection: 'column', alignItems: 'center', minHeight: '100vh', justifyContent: 'center' }}>
-      <Button variant="contained" sx={{ mb: 2 }} onClick={handleOpen}>Add Pet</Button>
+      <Box sx={{ display: 'flex', gap: 2, mb: 2 }}>
+        <Button variant="contained" onClick={handleOpen}>Add Pet</Button>
+        <Button variant="outlined" onClick={handleDownload}>Download List</Button>
+      </Box>
       <Dialog open={open} onClose={handleClose}>
         <DialogTitle>Add a New Pet</DialogTitle>
         <DialogContent sx={{ display: 'flex', flexDirection: 'column', gap: 2, minWidth: 300 }}>
